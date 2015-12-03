@@ -1,0 +1,74 @@
+Using chipotle.tsv in the data subdirectory:
+
+    Look at the head and the tail, and think for a minute about how the data is structured. What do you think each column means? What do you think each row means? Tell me! (If you're unsure, look at more of the file contents.)
+
+Columns represent an item descriptor, rows represent an individual item
+
+    How many orders do there appear to be?
+1834
+
+    How many lines are in the file?
+        4623 chipotle.tsv
+
+    Which burrito is more popular, steak or chicken?
+  
+  Chicken
+
+pressure% awk '{print $3, $4, $5}' chipotle.tsv | awk -F"[" '{print $1}'| sort |uniq -c|grep -i burrito
+  91 Barbacoa Burrito
+   6 Burrito
+  59 Carnitas Burrito
+ 553 Chicken Burrito
+ 368 Steak Burrito
+  95 Veggie Burrito
+
+
+    Do chicken burritos more often have black beans or pinto beans?
+
+black beans are more common
+pressure% grep -i "chicken burrito" chipotle.tsv |grep -i black |wc -l
+     282
+pressure% grep -i "chicken burrito" chipotle.tsv |grep -i pinto |wc -l
+     105
+
+     Make a list of all of the CSV or TSV files in the DAT7 repo (using a single command). Think about how wildcard characters can help you with this task.
+
+     pressure% find /Users/ml/code/DAT_SF_19 -name "*.*sv"
+/Users/ml/code/DAT_SF_19/data/airlines.csv
+/Users/ml/code/DAT_SF_19/data/chipotle.tsv
+/Users/ml/code/DAT_SF_19/data/drinks.csv
+/Users/ml/code/DAT_SF_19/data/hitters.csv
+/Users/ml/code/DAT_SF_19/data/imdb_1000.csv
+/Users/ml/code/DAT_SF_19/data/titanic.csv
+/Users/ml/code/DAT_SF_19/data/ufo.csv
+/Users/ml/code/DAT_SF_19/data/vehicles_test.csv
+/Users/ml/code/DAT_SF_19/data/vehicles_train.csv
+/Users/ml/code/DAT_SF_19/data/yelp.csv
+
+
+Count the number of occurrences of the word 'dictionary' (regardless of case) across all files in the DAT7 repo.
+
+pressure% grep -io '\<dictionary\>' */*|wc -w
+grep: project/project-examples: Is a directory
+       5
+pressure% grep -io '\<dictionary\>' project/project-examples/*|wc -w
+       0
+
+
+Optional: Use the the command line to discover something "interesting" about the Chipotle data. The advanced commands below may be helpful to you!
+
+Looks like there's a single occurrence of Chips at 1.99, typically they cost 1.69 as a side or 2.15 on their own.
+
+pressure% grep -i chips chipotle.tsv|egrep -v Guaca|egrep -v and|awk -F'NULL' '{print$2}'|sort |uniq -c
+  99 	$1.69
+   1 	$1.99
+   1 	$13.52
+ 192 	$2.15
+  17 	$4.30
+   1 	$5.07
+   1 	$6.45
+
+
+pressure% grep '$1.99' chipotle.tsv
+1793	1	Chips	NULL	$1.99
+
